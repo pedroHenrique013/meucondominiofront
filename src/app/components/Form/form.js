@@ -10,8 +10,8 @@ import Logo from "../Logo/logo";
 export default function Form() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [erro, setErro] = useState(''); // Adicionando um estado para o erro
   const router = useRouter();
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,11 +30,16 @@ export default function Form() {
         body: JSON.stringify({ email, senha }),
       });
 
+      if (!response.ok) {
+        throw new Error('Erro ao autenticar. Por favor, verifique suas credenciais.');
+      }
+
       const data = await response.json();
       router.push('/inicial');
       console.log(data);
     } catch (error) {
-      console.error('Erro ao enviar dados para a API:', error);
+      console.error(error);
+      setErro(error.message); // Atualizando o estado de erro
     }
   };
   
